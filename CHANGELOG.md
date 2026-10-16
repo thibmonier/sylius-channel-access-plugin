@@ -9,6 +9,15 @@
   validation as `exempt_routes` / `exempt_paths`; an empty or non-string value is refused, a route both exempted and
   restricted fails the compilation naming it. Without the options nothing changes.
 
+### Security
+
+- A restriction now **wins over an exemption** when a request matches both (was: the exemption).
+- The container compilation refuses an exemption that covers a restriction (or the other way round) on the resolved
+  values, for routes and paths, built-in entries included, naming both entries (was: equal strings only, before the
+  resolution of "%parameter%").
+- A suspicious path (`..`, `//`, backslash, NUL byte) matches the restrictions (fail closed) instead of escaping them,
+  and the built-in API restriction also covers the format suffixes (`orders.json`, `orders.jsonld`).
+
 ### Changed
 
 - The patterns of `exempt_*` must be strings (a number or a boolean was silently useless before).

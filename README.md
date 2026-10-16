@@ -136,7 +136,16 @@ API (`.../product-variants/*/tier-prices`). On a **closed** channel everything n
 refused, so these options only matter for prices hidden channels. A value that is empty or not a string
 is a configuration error naming the option. A route or path that is both in `exempt_*` and in
 `restricted_*` (the built-in ones included) fails the container compilation with a message naming it;
-when patterns overlap without being equal, the exemption wins.
+the comparison is made on the resolved values and covers an entry that includes another one (for instance
+`exempt_paths: /api/v2/shop/*` against the built-in restricted `.../orders`), in either direction, naming both
+entries. **A restriction wins over an exemption** (deny over allow) for the overlaps this comparison cannot see
+(two wildcard patterns that cross): the safe side of a mistake is a refused route, not an open one.
+
+Prefer **route names** to paths: a path pattern has to guess every spelling of the URL (format suffix such as
+`.json` / `.jsonld`, trailing slash, locale prefix), a route name is what the router matched. The built-in API
+restriction covers `orders`, `orders/*` and `orders.*`; for your own API path add the variants (`.../tier-prices*`).
+A path that cannot be trusted (`..`, `//`, a backslash, a NUL byte) is treated as **restricted** by the restriction
+matcher (fail closed) and never matches an exemption.
 
 The redirect always goes to `login_route`; no query parameter or header of the request chooses
 the target (no open redirect). The locale of the login URL is the request one when the channel
