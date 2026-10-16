@@ -1,0 +1,28 @@
+imports:
+    - { resource: "@TmonierSyliusChannelAccessPlugin/config/config.yaml" }
+    - { resource: "dbal_savepoints.php" }
+
+# PunchOut-like endpoints and feeds stay reachable by anonymous visitors of a closed channel.
+tmonier_sylius_channel_access:
+    exempt_routes: ['app_test_exempt_route']
+    exempt_paths: ['/feeds/*']
+
+# The channel entity of the application uses the plugin trait (see the README).
+sylius_channel:
+    resources:
+        channel:
+            classes:
+                model: Tests\Tmonier\SyliusChannelAccessPlugin\Entity\Channel\Channel
+
+doctrine:
+    orm:
+        mappings:
+            TmonierChannelAccessTestApplication:
+                type: attribute
+                dir: '%kernel.project_dir%/../../../tests/TestApplication/src/Entity'
+                prefix: 'Tests\Tmonier\SyliusChannelAccessPlugin\Entity'
+                is_bundle: false
+
+twig:
+    paths:
+        '%kernel.project_dir%/../../../tests/TestApplication/templates': ~

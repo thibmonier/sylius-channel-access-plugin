@@ -1,0 +1,18 @@
+# The plugin has no routes; the file is required by the test application.
+
+# Routes of the tests: a feed and a PunchOut-like endpoint exempted by the test configuration,
+# and a page that is not exempted.
+app_test_feed:
+    path: /feeds/products.txt
+    controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController::templateAction
+    defaults: { template: 'feed.txt.twig' }
+
+app_test_exempt_route:
+    path: /integrations/setup
+    controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController::templateAction
+    defaults: { template: 'feed.txt.twig' }
+
+app_test_private:
+    path: /private/page
+    controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController::templateAction
+    defaults: { template: 'feed.txt.twig' }
