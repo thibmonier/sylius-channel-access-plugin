@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tmonier\SyliusChannelAccessPlugin\DependencyInjection;
 
 use Sylius\Bundle\CoreBundle\DependencyInjection\PrependDoctrineMigrationsTrait;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -16,7 +17,7 @@ final class TmonierSyliusChannelAccessExtension extends Extension implements Pre
     use PrependDoctrineMigrationsTrait;
 
     /** Reachable by an anonymous visitor of a closed channel: the pages needed to sign in or register. */
-    private const BUILT_IN_EXEMPT_ROUTES = [
+    private const array BUILT_IN_EXEMPT_ROUTES = [
         'sylius_shop_homepage',
         'sylius_shop_switch_locale',
         'sylius_shop_switch_currency',
@@ -34,7 +35,7 @@ final class TmonierSyliusChannelAccessExtension extends Extension implements Pre
     ];
 
     /** Placeholders are resolved by the container. */
-    private const BUILT_IN_EXEMPT_PATHS = [
+    private const array BUILT_IN_EXEMPT_PATHS = [
         '/%sylius_admin.path_name%',
         '/%sylius_admin.path_name%/*',
         '%sylius.security.api_admin_route%/*',
@@ -50,31 +51,53 @@ final class TmonierSyliusChannelAccessExtension extends Extension implements Pre
     ];
 
     /** Anonymous visitors of a prices hidden channel are sent to the login page for these. */
-    private const RESTRICTED_ROUTES = [
+    private const array RESTRICTED_ROUTES = [
         'sylius_shop_cart_*',
         'sylius_shop_checkout_*',
         'sylius_shop_order_*',
         'sylius_shop_payment_request_*',
     ];
 
-    private const RESTRICTED_PATHS = [
+    private const array RESTRICTED_PATHS = [
         '%sylius.security.api_shop_route%/orders',
         '%sylius.security.api_shop_route%/orders/*',
     ];
 
     public function load(array $configs, ContainerBuilder $container): void
     {
-        /** @var array{login_route: string, exempt_routes: list<string>, exempt_paths: list<string>} $config */
+        /** @var array{login_route: string, exempt_routes: list<string>, exempt_paths: list<string>, restricted_routes: list<string>, restricted_paths: list<string>} $config */
         $config = $this->processConfiguration(new Configuration(), $configs);
 
+        $exemptRoutes = array_values(array_unique([...self::BUILT_IN_EXEMPT_ROUTES, ...$config['exempt_routes']]));
+        $exemptPaths = array_values(array_unique([...self::BUILT_IN_EXEMPT_PATHS, ...$config['exempt_paths']]));
+        $restrictedRoutes = array_values(array_unique([...self::RESTRICTED_ROUTES, ...$config['restricted_routes']]));
+        $restrictedPaths = array_values(array_unique([...self::RESTRICTED_PATHS, ...$config['restricted_paths']]));
+        $this->assertNoConflict('routes', $exemptRoutes, $restrictedRoutes);
+        $this->assertNoConflict('paths', $exemptPaths, $restrictedPaths);
+
         $container->setParameter('tmonier_channel_access.login_route', $config['login_route']);
-        $container->setParameter('tmonier_channel_access.exempt_routes', array_values(array_unique([...self::BUILT_IN_EXEMPT_ROUTES, ...$config['exempt_routes']])));
-        $container->setParameter('tmonier_channel_access.exempt_paths', array_values(array_unique([...self::BUILT_IN_EXEMPT_PATHS, ...$config['exempt_paths']])));
-        $container->setParameter('tmonier_channel_access.restricted_routes', self::RESTRICTED_ROUTES);
-        $container->setParameter('tmonier_channel_access.restricted_paths', self::RESTRICTED_PATHS);
+        $container->setParameter('tmonier_channel_access.exempt_routes', $exemptRoutes);
+        $container->setParameter('tmonier_channel_access.exempt_paths', $exemptPaths);
+        $container->setParameter('tmonier_channel_access.restricted_routes', $restrictedRoutes);
+        $container->setParameter('tmonier_channel_access.restricted_paths', $restrictedPaths);
 
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
         $loader->load('services.php');
+    }
+
+    /**
+     * An entry both exempted and restricted would be exempted (the exemption is checked first): it is a mistake
+     * of the configuration, reported at compile time instead of silently leaving the route open.
+     *
+     * @param list<string> $exempt
+     * @param list<string> $restricted
+     */
+    private function assertNoConflict(string $kind, array $exempt, array $restricted): void
+    {
+        $conflicts = array_values(array_intersect($exempt, $restricted));
+        if ([] !== $conflicts) {
+            throw new InvalidConfigurationException(sprintf('The %s %s appear in both the exempt_%s and the restricted_%s of "tmonier_sylius_channel_access": a route cannot be exempted and restricted at once.', $kind, implode(', ', array_map(static fn (string $entry): string => '"' . $entry . '"', $conflicts)), $kind, $kind));
+        }
     }
 
     public function prepend(ContainerBuilder $container): void
