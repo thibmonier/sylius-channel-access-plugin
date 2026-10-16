@@ -16,3 +16,24 @@ app_test_private:
     path: /private/page
     controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController::templateAction
     defaults: { template: 'feed.txt.twig' }
+
+# US-042: routes the test configuration restricts (exact name, name pattern, API path) and one it does not.
+app_test_restricted_exact:
+    path: /restricted/exact
+    controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController::templateAction
+    defaults: { template: 'feed.txt.twig' }
+
+app_test_restricted_wild_one:
+    path: /restricted/wild-one
+    controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController::templateAction
+    defaults: { template: 'feed.txt.twig' }
+
+app_test_restricted_api_prices:
+    path: /api/v2/shop/test-prices/{code}
+    controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController::templateAction
+    defaults: { template: 'feed.txt.twig' }
+
+app_test_unrestricted:
+    path: /unrestricted/page
+    controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController::templateAction
+    defaults: { template: 'feed.txt.twig' }

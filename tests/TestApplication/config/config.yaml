@@ -6,6 +6,9 @@ imports:
 tmonier_sylius_channel_access:
     exempt_routes: ['app_test_exempt_route']
     exempt_paths: ['/feeds/*']
+    # Refused to anonymous visitors of a prices hidden channel, like the cart.
+    restricted_routes: ['app_test_restricted_exact', 'app_test_restricted_wild_*']
+    restricted_paths: ['%sylius.security.api_shop_route%/test-prices/*']
 
 # The channel entity of the application uses the plugin trait (see the README).
 sylius_channel:
