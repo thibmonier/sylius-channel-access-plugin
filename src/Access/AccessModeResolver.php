@@ -51,10 +51,11 @@ final class AccessModeResolver implements AccessModeResolverInterface
         try {
             $channel = $this->channelContext->getChannel();
         } catch (ChannelNotFoundException) {
-            return AccessMode::Open;
+            // An HTTP request that no channel claims: refuse rather than serve it unprotected.
+            return AccessMode::Closed;
         }
 
-        return $channel instanceof ChannelInterface ? $this->modeOf($channel) : AccessMode::Open;
+        return $channel instanceof ChannelInterface ? $this->modeOf($channel) : AccessMode::Closed;
     }
 
     public function isVisitorSignedIn(): bool

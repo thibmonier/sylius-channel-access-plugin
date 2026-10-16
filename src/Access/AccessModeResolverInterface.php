@@ -11,8 +11,8 @@ use Sylius\Component\Core\Model\ChannelInterface;
  * may see instead of reading the channel themselves. The visitor is "signed in" when the security
  * token holds a Sylius user (shop customer or administrator); everything else is anonymous.
  *
- * Without an HTTP request (console command, message handler) or without a resolvable channel the
- * mode is `open`: the restrictions protect HTTP visitors.
+ * Without an HTTP request (console command, message handler) the mode is `open`: the restrictions
+ * protect HTTP visitors. An HTTP request without a resolvable channel is `closed`.
  */
 interface AccessModeResolverInterface
 {
