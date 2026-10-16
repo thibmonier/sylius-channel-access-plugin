@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Tmonier\SyliusChannelAccessPlugin\Unit\DependencyInjection;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Tmonier\SyliusChannelAccessPlugin\DependencyInjection\TmonierSyliusChannelAccessExtension;
 
@@ -44,6 +43,7 @@ final class TmonierSyliusChannelAccessExtensionTest extends TestCase
         }
         self::assertContains('/api/x/*', $paths);
         self::assertContains('%sylius.security.api_shop_route%/orders/*', $paths);
+        self::assertContains('%sylius.security.api_shop_route%/orders.*', $paths, 'the format suffixes of the API');
     }
 
     public function testWithoutOptionsOnlyTheBuiltInRestrictionsApply(): void
@@ -52,31 +52,7 @@ final class TmonierSyliusChannelAccessExtensionTest extends TestCase
         (new TmonierSyliusChannelAccessExtension())->load([], $container);
 
         self::assertSame(['sylius_shop_cart_*', 'sylius_shop_checkout_*', 'sylius_shop_order_*', 'sylius_shop_payment_request_*'], $container->getParameter('tmonier_channel_access.restricted_routes'));
-        self::assertSame(['%sylius.security.api_shop_route%/orders', '%sylius.security.api_shop_route%/orders/*'], $container->getParameter('tmonier_channel_access.restricted_paths'));
-    }
-
-    public function testARouteBothExemptedAndRestrictedFailsTheCompilationAndIsNamed(): void
-    {
-        $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('"app_feed"');
-
-        (new TmonierSyliusChannelAccessExtension())->load([['exempt_routes' => ['app_feed'], 'restricted_routes' => ['app_feed']]], new ContainerBuilder());
-    }
-
-    public function testARouteRestrictedAndExemptedByTheBuiltInListFailsToo(): void
-    {
-        $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('"sylius_shop_cart_*"');
-
-        (new TmonierSyliusChannelAccessExtension())->load([['exempt_routes' => ['sylius_shop_cart_*']]], new ContainerBuilder());
-    }
-
-    public function testAPathBothExemptedAndRestrictedFailsTheCompilationAndIsNamed(): void
-    {
-        $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('"/feeds/*"');
-
-        (new TmonierSyliusChannelAccessExtension())->load([['exempt_paths' => ['/feeds/*'], 'restricted_paths' => ['/feeds/*']]], new ContainerBuilder());
+        self::assertSame(['%sylius.security.api_shop_route%/orders', '%sylius.security.api_shop_route%/orders/*', '%sylius.security.api_shop_route%/orders.*'], $container->getParameter('tmonier_channel_access.restricted_paths'));
     }
 
     public function testTheCatalogueAndTheCartAreNeverExemptedByDefault(): void

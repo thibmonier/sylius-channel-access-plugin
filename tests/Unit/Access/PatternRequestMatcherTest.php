@@ -45,4 +45,33 @@ final class PatternRequestMatcherTest extends TestCase
 
         self::assertFalse((new PatternRequestMatcher([], []))->matches($request));
     }
+
+    /** @return iterable<string, array{string}> */
+    public static function suspiciousPaths(): iterable
+    {
+        yield 'two dots in a code' => ['/api/v2/shop/product-variants/A..B/tier-prices'];
+        yield 'climbing' => ['/api/v2/shop/product-variants/../x'];
+        yield 'encoded dots' => ['/api/v2/shop/product-variants/%2e%2e/x'];
+        yield 'doubled slash' => ['/api/v2/shop//x'];
+        yield 'NUL byte' => ['/api/v2/shop/x%00'];
+    }
+
+    /** A restriction fails closed: a path that cannot be trusted is treated as restricted (an exemption is the opposite). */
+    #[DataProvider('suspiciousPaths')]
+    public function testASuspiciousPathMatchesAMatcherThatFailsClosed(string $path): void
+    {
+        $restricted = new PatternRequestMatcher([], ['/api/v2/shop/product-variants/*/tier-prices'], true);
+        $exempt = new PatternRequestMatcher([], ['/api/v2/shop/product-variants/*/tier-prices']);
+
+        self::assertTrue($restricted->matches(Request::create($path)), 'restricted');
+        self::assertFalse($exempt->matches(Request::create($path)), 'exempt');
+    }
+
+    public function testAMatcherThatFailsClosedStillLetsOrdinaryPathsThrough(): void
+    {
+        $restricted = new PatternRequestMatcher([], ['/api/v2/shop/orders/*'], true);
+
+        self::assertFalse($restricted->matches(Request::create('/en_US/products/red-shirt')));
+        self::assertTrue($restricted->matches(Request::create('/api/v2/shop/orders/abc')));
+    }
 }

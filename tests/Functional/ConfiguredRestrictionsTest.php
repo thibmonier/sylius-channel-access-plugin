@@ -76,4 +76,44 @@ final class ConfiguredRestrictionsTest extends WebTestCase
 
         $this->assertRedirectedToLogin();
     }
+
+    /** @return iterable<string, array{string}> */
+    public static function variantsOfARestrictedApiPath(): iterable
+    {
+        yield 'trailing slash' => ['/api/v2/shop/orders/'];
+        yield 'json format suffix' => ['/api/v2/shop/orders.json'];
+        yield 'jsonld format suffix' => ['/api/v2/shop/orders.jsonld'];
+        yield 'item' => ['/api/v2/shop/orders/ABC'];
+        yield 'item with suffix' => ['/api/v2/shop/orders/ABC.jsonld'];
+        yield 'configured path with suffix' => ['/api/v2/shop/test-prices/ABC.json'];
+        yield 'configured path, trailing slash' => ['/api/v2/shop/test-prices/ABC/'];
+        yield 'configured path, code with two dots' => ['/api/v2/shop/test-prices/A..B'];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('variantsOfARestrictedApiPath')]
+    public function testTheVariantsOfARestrictedApiPathAreRefusedToo(string $path): void
+    {
+        $this->client->request('GET', $path, [], [], $this->apiHeaders());
+
+        self::assertSame(401, $this->statusCode(), $path);
+    }
+
+    /** @return iterable<string, array{string}> */
+    public static function variantsOfARestrictedPage(): iterable
+    {
+        yield 'without the trailing slash' => ['/cart'];
+        yield 'with the trailing slash' => ['/cart/'];
+        yield 'checkout step' => ['/checkout/address'];
+        yield 'query string' => ['/cart/?x=1'];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('variantsOfARestrictedPage')]
+    public function testTheVariantsOfARestrictedPageEndOnTheLoginForAnAnonymousVisitor(string $path): void
+    {
+        $this->client->followRedirects();
+        $this->get($this->shopUrl($path));
+
+        self::assertSame(200, $this->statusCode(), $path);
+        self::assertSame($this->shopUrl('/login'), $this->client->getRequest()->getPathInfo(), $path);
+    }
 }
