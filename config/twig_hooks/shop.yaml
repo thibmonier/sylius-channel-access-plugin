@@ -26,9 +26,25 @@ sylius_twig_hooks:
 
         # The mini cart shows totals.
         'sylius_shop.base.header.content':
+            taxon_hamburger:
+                condition: "@=is_granted('TMONIER_CHANNEL_ACCESS_SEE_CATALOG')"
             cart:
                 condition: "@=is_granted('TMONIER_CHANNEL_ACCESS_SEE_PRICES')"
 
         'sylius_shop.base.offcanvas':
             cart:
                 condition: "@=is_granted('TMONIER_CHANNEL_ACCESS_SEE_PRICES')"
+
+        # The catalogue itself: the home page products and the taxon menu of every page (also on the
+        # pages left open by a closed channel and on its error pages).
+        'sylius_shop.homepage.index':
+            latest_deals:
+                condition: "@=is_granted('TMONIER_CHANNEL_ACCESS_SEE_CATALOG')"
+            new_collection:
+                condition: "@=is_granted('TMONIER_CHANNEL_ACCESS_SEE_CATALOG')"
+            latest_products:
+                condition: "@=is_granted('TMONIER_CHANNEL_ACCESS_SEE_CATALOG')"
+
+        'sylius_shop.base.header.navbar':
+            menu:
+                condition: "@=is_granted('TMONIER_CHANNEL_ACCESS_SEE_CATALOG')"
