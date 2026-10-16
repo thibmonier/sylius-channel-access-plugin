@@ -148,6 +148,12 @@ The service is `tmonier_channel_access.resolver` (alias on the interface). Twig:
 `TMONIER_CHANNEL_ACCESS_SEE_PRICES`. A plugin that shows prices elsewhere (a quick order form, a
 price list) asks the resolver, or puts the same condition on its hookable.
 
+Extension points (used by `tmonier/sylius-registration-approval-plugin`): decorate the service
+`tmonier_channel_access.resolver` to change who counts as signed in (every protection follows), and
+call `VisitorAccessListener::refusalFor(Request): ?Response` (service
+`tmonier_channel_access.listener.visitor_access`) to know whether an anonymous visitor would be
+refused for a request, and with which response.
+
 ## How it works and limits
 
 - Prices of the shop pages are hidden by **conditions on the Sylius hookables** (product page:
@@ -161,6 +167,7 @@ price list) asks the resolver, or puts the same condition on its hookable.
 - Static files (`/media`, `/build`) are served by the web server and are not protected.
 - A restricted channel answers `Cache-Control: private, no-store` and `Vary: Cookie, Authorization`.
   An exempt route that sets its response `public` on purpose keeps its headers.
+- On a closed channel an unknown URL redirects to the login even for a signed-in customer: the router rejects the path before the firewall has run, so the visitor is still unknown.
 - Console commands and message handlers have no HTTP request: they are never restricted.
 - The administration and the admin API are never restricted by this plugin.
 

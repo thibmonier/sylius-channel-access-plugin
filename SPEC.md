@@ -54,9 +54,12 @@ the web server; admin and console never restricted; other price sources in third
 
 ## 4. Extension points used by US-020
 
-US-020 reads `AccessModeResolverInterface::modeOf($channel)` / `currentMode()` to know whether a
-channel is closed and adds its own registration routes to `exempt_routes` in its configuration
-(the routes are already built-in for the standard Sylius registration).
+US-020 decorates `tmonier_channel_access.resolver` (a pending customer is "not signed in"), calls
+`VisitorAccessListener::refusalFor()` (service `tmonier_channel_access.listener.visitor_access`) to
+turn the anonymous refusal into a 403 for a signed-in pending customer, and prepends its waiting
+page route to `exempt_routes`. These two service ids and `refusalFor()` are part of the contract.
+Known limit: on a closed channel an unknown URL redirects to the login even for a signed-in
+customer (kernel.exception runs when the firewall has not).
 
 ## 5. Test strategy
 
