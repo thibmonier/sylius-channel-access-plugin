@@ -62,12 +62,15 @@ final class AccessModeResolverTest extends TestCase
         self::assertFalse($resolver->canSeePrices());
     }
 
-    public function testNoChannelMeansNoRestriction(): void
+    public function testAnHttpRequestWithoutChannelFailsClosed(): void
     {
         $context = $this->createStub(ChannelContextInterface::class);
         $context->method('getChannel')->willThrowException(new ChannelNotFoundException());
+        $resolver = new AccessModeResolver($context, new TokenStorage(), $this->requests());
 
-        self::assertSame(AccessMode::Open, (new AccessModeResolver($context, new TokenStorage(), $this->requests()))->currentMode());
+        self::assertSame(AccessMode::Closed, $resolver->currentMode());
+        self::assertFalse($resolver->canSeeCatalog());
+        self::assertFalse($resolver->canSeePrices());
     }
 
     public function testNoRequestMeansNoRestriction(): void

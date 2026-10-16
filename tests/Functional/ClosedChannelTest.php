@@ -80,12 +80,40 @@ final class ClosedChannelTest extends WebTestCase
         yield 'configured route (integration endpoint)' => ['/integrations/setup'];
     }
 
-    public function testThePricesAreHiddenOnTheExemptHomepage(): void
+    public function testNoPriceOnTheExemptHomepage(): void
     {
         $html = $this->get($this->shopUrl('/'));
 
         self::assertDoesNotMatchRegularExpression($this->pricePattern(), $html);
-        self::assertStringContainsString('data-test-tmonier-prices-hidden', $html);
+    }
+
+    /** The error pages of the shop share the layout (taxon menu hook) of these pages. */
+    public function testTheExemptPagesLeakNothingOfTheCatalogue(): void
+    {
+        $taxon = $this->product()->getMainTaxon();
+        self::assertNotNull($taxon);
+        $slug = (string) $taxon->getTranslation($this->localeCode())->getSlug();
+
+        foreach ([$this->shopUrl('/'), $this->shopUrl('/login'), $this->shopUrl('/register')] as $url) {
+            $html = $this->get($url);
+
+            self::assertStringNotContainsString('/products/', $html, $url);
+            self::assertStringNotContainsString('/taxons/', $html, $url);
+            self::assertStringNotContainsString($slug, $html, $url);
+            foreach ($this->visibleProductNames() as $name) {
+                self::assertStringNotContainsString($name, $html, $url);
+            }
+        }
+    }
+
+    public function testASignedInCustomerSeesTheMenuAndTheProductsOnTheHomePage(): void
+    {
+        $this->loginCustomer();
+
+        $html = $this->get($this->shopUrl('/'));
+
+        self::assertStringContainsString('/taxons/', $html);
+        self::assertStringContainsString('/products/', $html);
     }
 
     public function testASignedInCustomerBrowsesTheCatalogueAsBeforeThePlugin(): void
@@ -99,6 +127,17 @@ final class ClosedChannelTest extends WebTestCase
         self::assertStringNotContainsString('data-test-tmonier-prices-hidden', $html);
         $this->get($this->shopUrl('/cart/'));
         self::assertSame(200, $this->statusCode());
+    }
+
+    /** @return list<string> */
+    private function visibleProductNames(): array
+    {
+        $names = [];
+        foreach ($this->entityManager()->getRepository(\Sylius\Component\Core\Model\ProductInterface::class)->findBy(['enabled' => true], null, 30) as $product) {
+            $names[] = (string) $product->getName();
+        }
+
+        return array_values(array_filter($names));
     }
 
     public function testTheLoginRedirectNeverFollowsAnInputOfTheRequest(): void
