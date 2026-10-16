@@ -38,8 +38,8 @@ the web server; admin and console never restricted; other price sources in third
   too, which would block commands and message handlers; the resolver returns `open` without a
   main request.
 - **Hook conditions rather than template overrides**: the Sylius templates stay untouched, so an
-  open channel or a signed-in customer renders exactly as before. Risk: the hookable names and
-  the `condition` support of twig-hooks 0.12 (Sylius 2.2) are checked by the CI matrix only.
+  open channel or a signed-in customer renders exactly as before. The `condition` option
+  needs twig-hooks 0.14 (Sylius 2.3): Sylius 2.2 is not supported.
 - **Closed channel shows no price and no catalogue on the exempt pages** (anonymous): `canSeePrices` is false in every
   mode but `open`.
 - **No post-login target** is stored: the user lands on the default page after login (YAGNI;

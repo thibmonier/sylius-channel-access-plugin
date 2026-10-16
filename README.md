@@ -30,9 +30,9 @@ Polish; MySQL, MariaDB and PostgreSQL (Schema API migration).
 
 | | Version |
 |---|---|
-| PHP | 8.2+ (8.3+ with Sylius 2.3) |
-| Sylius | 2.2.9+, 2.3 |
-| Symfony | 6.4, 7.4 (Sylius 2.2); 6.4, 7.4, 8.0 (Sylius 2.3) |
+| PHP | 8.3+ |
+| Sylius | 2.3 (the plugin relies on the `condition` option of the twig hooks, absent from Sylius 2.2) |
+| Symfony | 6.4, 7.4, 8.0 |
 
 ## Installation
 

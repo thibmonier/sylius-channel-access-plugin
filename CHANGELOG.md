@@ -21,3 +21,8 @@
   lists and the taxon menu / hamburger (header of every page) are hidden from anonymous visitors
   (`TMONIER_CHANNEL_ACCESS_SEE_CATALOG`).
 - An HTTP request without a resolvable channel is treated as `closed` (was `open`).
+
+### Compatibility
+
+- Requires Sylius 2.3 and PHP 8.3 (the hook `condition` option does not exist in Sylius 2.2).
+- Voters are compatible with Symfony 8 (optional `?Vote $vote` argument).
