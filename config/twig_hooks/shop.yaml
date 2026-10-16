@@ -1,0 +1,34 @@
+# Prices and purchase are hidden from the visitors who may not see them (prices hidden channel,
+# or the pages left open on a closed channel): the Sylius hookables are disabled by a condition
+# and replaced by a link to the login page. Signed-in customers and open channels render the
+# unchanged Sylius templates.
+sylius_twig_hooks:
+    hooks:
+        'sylius_shop.product.show.content.info.summary':
+            prices:
+                condition: "@=is_granted('TMONIER_CHANNEL_ACCESS_SEE_PRICES')"
+            catalog_promotions:
+                condition: "@=is_granted('TMONIER_CHANNEL_ACCESS_SEE_PRICES')"
+            add_to_cart:
+                condition: "@=is_granted('TMONIER_CHANNEL_ACCESS_SEE_PRICES')"
+            tmonier_prices_hidden:
+                template: '@TmonierSyliusChannelAccessPlugin/shop/prices_hidden.html.twig'
+                condition: "@=!is_granted('TMONIER_CHANNEL_ACCESS_SEE_PRICES')"
+                priority: 300
+
+        'sylius_shop.shared.product.card':
+            prices:
+                condition: "@=is_granted('TMONIER_CHANNEL_ACCESS_SEE_PRICES')"
+            tmonier_prices_hidden:
+                template: '@TmonierSyliusChannelAccessPlugin/shop/prices_hidden.html.twig'
+                condition: "@=!is_granted('TMONIER_CHANNEL_ACCESS_SEE_PRICES')"
+                priority: 0
+
+        # The mini cart shows totals.
+        'sylius_shop.base.header.content':
+            cart:
+                condition: "@=is_granted('TMONIER_CHANNEL_ACCESS_SEE_PRICES')"
+
+        'sylius_shop.base.offcanvas':
+            cart:
+                condition: "@=is_granted('TMONIER_CHANNEL_ACCESS_SEE_PRICES')"

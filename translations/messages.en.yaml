@@ -1,0 +1,10 @@
+tmonier_channel_access:
+    shop:
+        login_to_see_prices: 'Log in to see your prices'
+    form:
+        access_mode: 'Access mode'
+        access_mode_help: 'Who can see the catalogue and the prices of this channel. Visitors who are not signed in are sent to the login page on a closed channel; the home page, the login, the registration and the configured routes stay reachable.'
+    mode:
+        open: 'Open: catalogue, prices and purchase for everybody'
+        prices_hidden: 'Prices hidden: prices and purchase for signed-in customers only'
+        closed: 'Closed: signed-in customers only'

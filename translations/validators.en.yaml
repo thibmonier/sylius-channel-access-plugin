@@ -1,0 +1,3 @@
+tmonier_channel_access:
+    access_mode:
+        invalid: 'Choose open, prices hidden or closed.'

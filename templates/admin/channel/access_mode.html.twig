@@ -1,0 +1,5 @@
+{% if hookable_metadata.context.form.accessMode is defined %}
+    <div class="col-12" data-test-tmonier-access-mode>
+        {{ form_row(hookable_metadata.context.form.accessMode) }}
+    </div>
+{% endif %}

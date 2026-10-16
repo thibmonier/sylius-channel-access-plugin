@@ -1,0 +1,3 @@
+tmonier_channel_access:
+    access_mode:
+        invalid: 'Kies open, prijzen verborgen of gesloten.'

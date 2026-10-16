@@ -1,0 +1,10 @@
+tmonier_channel_access:
+    shop:
+        login_to_see_prices: 'Connectez-vous pour voir vos prix'
+    form:
+        access_mode: 'Mode d''accès'
+        access_mode_help: 'Qui peut voir le catalogue et les prix de ce canal. Sur un canal fermé, les visiteurs non connectés sont redirigés vers la connexion ; l''accueil, la connexion, l''inscription et les routes configurées restent accessibles.'
+    mode:
+        open: 'Ouvert : catalogue, prix et achat pour tous'
+        prices_hidden: 'Prix masqués : prix et achat réservés aux clients connectés'
+        closed: 'Fermé : réservé aux clients connectés'

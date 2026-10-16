@@ -1,0 +1,10 @@
+tmonier_channel_access:
+    shop:
+        login_to_see_prices: 'Inicie sesión para ver sus precios'
+    form:
+        access_mode: 'Modo de acceso'
+        access_mode_help: 'Quién puede ver el catálogo y los precios de este canal. En un canal cerrado, los visitantes sin sesión son redirigidos al inicio de sesión; la página de inicio, el inicio de sesión, el registro y las rutas configuradas siguen accesibles.'
+    mode:
+        open: 'Abierto: catálogo, precios y compra para todos'
+        prices_hidden: 'Precios ocultos: precios y compra solo para clientes con sesión'
+        closed: 'Cerrado: solo para clientes con sesión'

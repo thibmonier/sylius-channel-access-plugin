@@ -1,0 +1,11 @@
+sylius_twig_hooks:
+    hooks:
+        'sylius_admin.channel.create.content.form.sections.general':
+            tmonier_access_mode:
+                template: '@TmonierSyliusChannelAccessPlugin/admin/channel/access_mode.html.twig'
+                priority: 50
+
+        'sylius_admin.channel.update.content.form.sections.general':
+            tmonier_access_mode:
+                template: '@TmonierSyliusChannelAccessPlugin/admin/channel/access_mode.html.twig'
+                priority: 50

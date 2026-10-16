@@ -1,0 +1,10 @@
+tmonier_channel_access:
+    shop:
+        login_to_see_prices: 'Log in om uw prijzen te zien'
+    form:
+        access_mode: 'Toegangsmodus'
+        access_mode_help: 'Wie de catalogus en de prijzen van dit kanaal mag zien. Bij een gesloten kanaal worden niet-ingelogde bezoekers naar de inlogpagina gestuurd; de homepage, het inloggen, de registratie en de geconfigureerde routes blijven bereikbaar.'
+    mode:
+        open: 'Open: catalogus, prijzen en aankoop voor iedereen'
+        prices_hidden: 'Prijzen verborgen: prijzen en aankoop alleen voor ingelogde klanten'
+        closed: 'Gesloten: alleen voor ingelogde klanten'

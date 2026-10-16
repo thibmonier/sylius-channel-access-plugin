@@ -1,0 +1,10 @@
+tmonier_channel_access:
+    shop:
+        login_to_see_prices: 'Melden Sie sich an, um Ihre Preise zu sehen'
+    form:
+        access_mode: 'Zugriffsmodus'
+        access_mode_help: 'Wer den Katalog und die Preise dieses Kanals sehen darf. In einem geschlossenen Kanal werden nicht angemeldete Besucher zur Anmeldung weitergeleitet; Startseite, Anmeldung, Registrierung und die konfigurierten Routen bleiben erreichbar.'
+    mode:
+        open: 'Offen: Katalog, Preise und Kauf für alle'
+        prices_hidden: 'Preise ausgeblendet: Preise und Kauf nur für angemeldete Kunden'
+        closed: 'Geschlossen: nur für angemeldete Kunden'
