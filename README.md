@@ -103,6 +103,8 @@ tmonier_sylius_channel_access:
     login_route: sylius_shop_login      # where a closed channel sends anonymous visitors ("_locale" parameter)
     exempt_routes: ['app_mcp_*']        # shell-style patterns on the route name
     exempt_paths: ['/punchout/*', '/feeds/*']   # shell-style patterns on the path
+    restricted_routes: ['app_quote_*']          # refused without access to the prices (see below)
+    restricted_paths: ['%sylius.security.api_shop_route%/product-variants/*/tier-prices']
 ```
 
 An anonymous visitor of a **closed** channel reaches only:
@@ -120,6 +122,21 @@ Patterns use `*` for any characters, `/` included (`/feeds/*` matches `/feeds/a/
 is built. A path containing `..`, `//` or a NUL byte is never matched by a path pattern (the
 request is refused as any non-listed path). **Everything not listed is refused**, including
 unknown paths (no 404 page that would show the menu of the catalogue).
+
+### Restricting more routes (`restricted_routes`, `restricted_paths`)
+
+On a **prices hidden** channel an anonymous visitor is refused the cart, the checkout, the orders and
+the shop API orders. Other plugins add routes that show prices or build a priced document; list them
+with the same patterns as the exemptions (route names with `*`, paths with `*`, `%parameter%`
+placeholders resolved by the container). They are merged with the built-in ones and refused like the
+cart: redirection to the login for pages, 401 JSON under the shop API. Examples: the quote request form
+(`tmonier_quote_request_shop_new`, `tmonier_quote_request_shop_basket_add`), the quick order
+(`tmonier_quick_order_shop_add`), the AI assistants consent (`tmonier_b2b_mcp_shop_*`), the volume prices
+API (`.../product-variants/*/tier-prices`). On a **closed** channel everything not exempt is already
+refused, so these options only matter for prices hidden channels. A value that is empty or not a string
+is a configuration error naming the option. A route or path that is both in `exempt_*` and in
+`restricted_*` (the built-in ones included) fails the container compilation with a message naming it;
+when patterns overlap without being equal, the exemption wins.
 
 The redirect always goes to `login_route`; no query parameter or header of the request chooses
 the target (no open redirect). The locale of the login URL is the request one when the channel

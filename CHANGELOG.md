@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Options `restricted_routes` and `restricted_paths`: routes and paths refused to a visitor who may not see the
+  prices, merged with the built-in ones (cart, checkout, orders, shop API orders). Same patterns and
+  validation as `exempt_routes` / `exempt_paths`; an empty or non-string value is refused, a route both exempted and
+  restricted fails the compilation naming it. Without the options nothing changes.
+
+### Changed
+
+- The patterns of `exempt_*` must be strings (a number or a boolean was silently useless before).
+
 ## 0.1.0 - 2026-10-16
 
 ### Added
