@@ -11,7 +11,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 final class Configuration implements ConfigurationInterface
 {
     /** Patterns that would exempt every request: refused. */
-    private const TOO_BROAD = ['*', '**', '/*', '/**', '*/*'];
+    private const array TOO_BROAD = ['*', '**', '/*', '/**', '*/*'];
 
     public function getConfigTreeBuilder(): TreeBuilder
     {
