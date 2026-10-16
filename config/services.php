@@ -34,7 +34,7 @@ return static function (ContainerConfigurator $container): void {
         ->args(['%tmonier_channel_access.exempt_routes%', '%tmonier_channel_access.exempt_paths%'])
     ;
     $services->set('tmonier_channel_access.matcher.restricted_when_prices_hidden', PatternRequestMatcher::class)
-        ->args(['%tmonier_channel_access.restricted_routes%', '%tmonier_channel_access.restricted_paths%'])
+        ->args(['%tmonier_channel_access.restricted_routes%', '%tmonier_channel_access.restricted_paths%', true])
     ;
 
     // After the firewall (priority 8): the token is known.

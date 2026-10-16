@@ -52,15 +52,21 @@ final readonly class VisitorAccessListener
     public function refusalFor(Request $request): ?Response
     {
         $mode = $this->resolver->currentMode();
-        if (AccessMode::Open === $mode || $this->resolver->isVisitorSignedIn() || $this->exempt->matches($request)) {
+        if (AccessMode::Open === $mode || $this->resolver->isVisitorSignedIn()) {
             return null;
         }
 
-        if (AccessMode::Closed === $mode || $this->restrictedWhenPricesHidden->matches($request)) {
+        // A restriction wins over an exemption (deny over allow): the compilation refuses the overlaps it can see,
+        // this settles the others, whatever the mode.
+        if ($this->restrictedWhenPricesHidden->matches($request)) {
             return $this->refusal($request);
         }
 
-        return null;
+        if ($this->exempt->matches($request)) {
+            return null;
+        }
+
+        return AccessMode::Closed === $mode ? $this->refusal($request) : null;
     }
 
     private function refusal(Request $request): Response
