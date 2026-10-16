@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tmonier\SyliusChannelAccessPlugin\Security;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Tmonier\SyliusChannelAccessPlugin\Access\AccessModeResolverInterface;
 
@@ -26,7 +27,7 @@ final class SeePricesVoter extends Voter
         return \in_array($attribute, [ChannelAccessPermissions::SEE_PRICES, ChannelAccessPermissions::SEE_CATALOG], true);
     }
 
-    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token, ?Vote $vote = null): bool
     {
         return ChannelAccessPermissions::SEE_CATALOG === $attribute ? $this->resolver->canSeeCatalog() : $this->resolver->canSeePrices();
     }
