@@ -17,7 +17,7 @@ on the server.
 |---|---|---|
 | `open` (default) | Everything, as Sylius | Everything |
 | `prices_hidden` | Catalogue pages; **no price, no promotion, no buy button** (replaced by a "Log in to see your prices" link), no mini cart; cart, checkout and order routes redirect to the login; the shop API returns no price and refuses carts | Everything |
-| `closed` | **Only the home page, the login, the registration, the password reset and the routes you exempt**; everything else redirects to the login (401 JSON on `/api/v2/shop/*`); no price even on the home page | Everything |
+| `closed` | **Only the home page, the login, the registration, the password reset and the routes you exempt**; everything else redirects to the login (401 JSON on `/api/v2/shop/*`); no price, no product and no taxon menu even on the home page and the login | Everything |
 
 Also: a field on the channel form of the admin (invalid value refused, previous mode kept);
 responses of a restricted channel are `private, no-store` (no shared cache mixes visitors); a
@@ -135,7 +135,7 @@ enum AccessMode: string { case Open = 'open'; case PricesHidden = 'prices_hidden
 interface AccessModeResolverInterface
 {
     public function modeOf(ChannelInterface $channel): AccessMode;
-    public function currentMode(): AccessMode;      // channel of the current HTTP request; Open without request or channel
+    public function currentMode(): AccessMode;      // channel of the current HTTP request; Open without request, Closed without channel
     public function isVisitorSignedIn(): bool;      // the token holds a Sylius user (customer or administrator)
     public function canSeeCatalog(): bool;          // false: anonymous visitor of a closed channel
     public function canSeePrices(): bool;           // false: anonymous visitor of a channel that is not open
@@ -144,8 +144,8 @@ interface AccessModeResolverInterface
 
 The service is `tmonier_channel_access.resolver` (alias on the interface). Twig:
 `tmonier_channel_access_mode()`, `tmonier_channel_can_see_prices()`,
-`tmonier_channel_can_see_catalog()`. Security attribute for `is_granted()` and hook conditions:
-`TMONIER_CHANNEL_ACCESS_SEE_PRICES`. A plugin that shows prices elsewhere (a quick order form, a
+`tmonier_channel_can_see_catalog()`. Security attributes for `is_granted()` and hook conditions:
+`TMONIER_CHANNEL_ACCESS_SEE_PRICES`, `TMONIER_CHANNEL_ACCESS_SEE_CATALOG`. A plugin that shows prices elsewhere (a quick order form, a
 price list) asks the resolver, or puts the same condition on its hookable.
 
 Extension points (used by `tmonier/sylius-registration-approval-plugin`): decorate the service
@@ -156,6 +156,7 @@ refused for a request, and with which response.
 
 ## How it works and limits
 
+- The catalogue (home page product lists, taxon menu and hamburger of every page, error pages included) is hidden from anonymous visitors of a **closed** channel by the same mechanism, with the attribute `TMONIER_CHANNEL_ACCESS_SEE_CATALOG`.
 - Prices of the shop pages are hidden by **conditions on the Sylius hookables** (product page:
   `prices`, `catalog_promotions`, `add_to_cart`; product card: `prices`; header and off-canvas:
   `cart`). A theme or a plugin that renders prices elsewhere has to use the same condition.

@@ -14,3 +14,10 @@
 - Admin field on the channel form, invalid value refused.
 - Public contract `AccessMode` + `AccessModeResolverInterface`, Twig functions, security attribute.
 - Translations in the seven languages.
+
+### Security
+
+- A closed channel no longer leaks the catalogue on the pages it leaves open: the home page product
+  lists and the taxon menu / hamburger (header of every page) are hidden from anonymous visitors
+  (`TMONIER_CHANNEL_ACCESS_SEE_CATALOG`).
+- An HTTP request without a resolvable channel is treated as `closed` (was `open`).
