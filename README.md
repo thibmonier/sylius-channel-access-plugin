@@ -1,5 +1,7 @@
 # Sylius Channel Access Plugin
 
+> Français : [README.fr.md](README.fr.md) <!-- vitrine:lang -->
+
 [![Build](https://github.com/thibmonier/sylius-channel-access-plugin/actions/workflows/build.yaml/badge.svg)](https://github.com/thibmonier/sylius-channel-access-plugin/actions/workflows/build.yaml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
@@ -25,6 +27,16 @@ last-line guard on the order modifier refuses any add to cart of an anonymous vi
 channel that hides prices (shop pages, live components, shop API, re-order); an unknown stored
 value reads as `closed`; translations in English, French, German, Spanish, Italian, Dutch and
 Polish; MySQL, MariaDB and PostgreSQL (Schema API migration).
+
+## Screenshots
+
+![Product page of an anonymous visitor on a "prices hidden" channel: "Log in to see your prices" replaces the price and the buy button](docs/images/shop-prices-hidden.jpg)
+
+*Product page of an anonymous visitor on a "prices hidden" channel: "Log in to see your prices" replaces the price and the buy button*
+
+![Access mode field on the channel form: open, prices hidden or closed](docs/images/admin-channel-access-mode.jpg)
+
+*Access mode field on the channel form: open, prices hidden or closed*
 
 ## Requirements
 
@@ -203,6 +215,14 @@ refused for a request, and with which response.
 See `CLAUDE.md` for the commands. The functional tests drive the real shop and API and check the
 rendered behaviour (redirects, absence of prices in pages and JSON, refused add to cart, exempt
 routes, forged inputs).
+
+<!-- vitrine:demo-b2b:start -->
+## B2B demo
+
+This plugin is used in the [Sylius B2B demo](https://github.com/thibmonier/sylius-b2b-demo): a Sylius 2.3 shop with fictitious sample data where the B2B plugins work together. The source code, setup and fixtures of the demo are in that repository.
+
+The demo is an example, not a production setup.
+<!-- vitrine:demo-b2b:end -->
 
 ## License
 
