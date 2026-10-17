@@ -28,6 +28,16 @@ channel that hides prices (shop pages, live components, shop API, re-order); an 
 value reads as `closed`; translations in English, French, German, Spanish, Italian, Dutch and
 Polish; MySQL, MariaDB and PostgreSQL (Schema API migration).
 
+## Screenshots
+
+![Product page of an anonymous visitor on a "prices hidden" channel: "Log in to see your prices" replaces the price and the buy button](docs/images/shop-prices-hidden.jpg)
+
+*Product page of an anonymous visitor on a "prices hidden" channel: "Log in to see your prices" replaces the price and the buy button*
+
+![Access mode field on the channel form: open, prices hidden or closed](docs/images/admin-channel-access-mode.jpg)
+
+*Access mode field on the channel form: open, prices hidden or closed*
+
 ## Requirements
 
 | | Version |

@@ -29,6 +29,16 @@ de la boutique, nouvelle commande à l'identique) ; une valeur stockée inconnue
 français, allemand, espagnol, italien, néerlandais et polonais ; MySQL, MariaDB et PostgreSQL (migration
 via la Schema API).
 
+## Captures d'écran
+
+![Fiche produit d'un visiteur anonyme sur un canal « prix masqués » : « Log in to see your prices » remplace le prix et le bouton d'achat](docs/images/shop-prices-hidden.jpg)
+
+*Fiche produit d'un visiteur anonyme sur un canal « prix masqués » : « Log in to see your prices » remplace le prix et le bouton d'achat*
+
+![Champ « Mode d'accès » du formulaire de canal : ouvert, prix masqués ou fermé](docs/images/admin-channel-access-mode.jpg)
+
+*Champ « Mode d'accès » du formulaire de canal : ouvert, prix masqués ou fermé*
+
 ## Prérequis
 
 | | Version |
