@@ -40,11 +40,14 @@ Polish; MySQL, MariaDB and PostgreSQL (Schema API migration).
 
 ## Requirements
 
-| | Version |
+| | Supported |
 |---|---|
-| PHP | 8.3+ |
-| Sylius | 2.3 (the plugin relies on the `condition` option of the twig hooks, absent from Sylius 2.2) |
+| PHP | 8.3, 8.4 |
+| Sylius | **2.3+ only** (the plugin relies on the `condition` option of the twig hooks, absent from Sylius 2.2) |
 | Symfony | 6.4, 7.4, 8.0 |
+| Database | MySQL 8.4, MariaDB 11.4, PostgreSQL 17 |
+
+The plugin is at version 0.x: its configuration may change between minor versions, read the [CHANGELOG](CHANGELOG.md) before upgrading.
 
 ## Installation
 
