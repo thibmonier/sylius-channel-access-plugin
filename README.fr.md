@@ -41,11 +41,14 @@ via la Schema API).
 
 ## Prérequis
 
-| | Version |
+| | Versions prises en charge |
 |---|---|
-| PHP | 8.3+ |
-| Sylius | 2.3 (le plugin s'appuie sur l'option `condition` des twig hooks, absente de Sylius 2.2) |
+| PHP | 8.3, 8.4 |
+| Sylius | **2.3+ uniquement** (le plugin s'appuie sur l'option `condition` des twig hooks, absente de Sylius 2.2) |
 | Symfony | 6.4, 7.4, 8.0 |
+| Base de données | MySQL 8.4, MariaDB 11.4, PostgreSQL 17 |
+
+Le plugin est en version 0.x : sa configuration peut évoluer entre versions mineures, lisez le [CHANGELOG](CHANGELOG.md) avant de mettre à jour.
 
 ## Installation
 
@@ -221,9 +224,6 @@ exemptées, entrées forgées).
 ## Démo B2B
 
 Ce plugin est utilisé dans la [démo B2B Sylius](https://github.com/thibmonier/sylius-b2b-demo) : une boutique Sylius 2.3 avec des données d'exemple fictives, où les plugins B2B fonctionnent ensemble. Le code source, l'installation et les fixtures de la démo sont dans ce dépôt.
-
-- Démo en ligne : [sylius-b2b.thibaut-monier.fr](https://sylius-b2b.thibaut-monier.fr)
-- Auteur : [Thibaut Monier](https://www.linkedin.com/in/thibautmonier/)
 
 La démo est un exemple, pas une configuration de production.
 <!-- vitrine:demo-b2b:end -->
